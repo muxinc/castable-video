@@ -9,7 +9,7 @@ It was primarily built for use in [Media Chrome](https://github.com/muxinc/media
 
 ```html
 <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
-<script type="module" src="./castable-video.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/castable-video"></script>
 
 <video
   id="castable"
