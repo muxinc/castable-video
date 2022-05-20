@@ -2,7 +2,7 @@
 
 Cast your video element to the big screen with ease!
 
-The lightweight `CastableVideo` class extends the native `HTMLVideoElement` API and adds casting functionality to any video element. The API was designed to have the feel of a native browser API similar to the other screen presentation API's.
+The lightweight `CastableVideoElement` class extends the native `HTMLVideoElement` API and adds casting functionality to any video element. The API was designed to have the feel of a native browser API similar to the other screen presentation API's.
 
 It was primarily built for use in [Media Chrome](https://github.com/muxinc/media-chrome) but it works great with any custom video controls as you can see in the example.
 
@@ -20,7 +20,7 @@ It was primarily built for use in [Media Chrome](https://github.com/muxinc/media
 <button onclick="window.castable.play()">Play</button>
 <button onclick="window.castable.pause()">Pause</button>
 <button onclick="window.castable.requestCast()">Request Cast</button>
-<button onclick="window.CastableVideo.exitCast()">Exit Cast</button>
+<button onclick="window.CastableVideoElement.exitCast()">Exit Cast</button>
 <script>
   window.castable.addEventListener('castchange', function (event) {
     console.log(event.type, event.detail);
@@ -33,12 +33,12 @@ It was primarily built for use in [Media Chrome](https://github.com/muxinc/media
 ### Methods
 
 - `video.requestCast(options)`
-- `CastableVideo.exitCast()`
+- `CastableVideoElement.exitCast()`
 
 ### Properties
 
-- `CastableVideo.castElement`
-- `CastableVideo.castAvailable`
+- `CastableVideoElement.castElement`
+- `CastableVideoElement.castAvailable`
 
 ### Events
 

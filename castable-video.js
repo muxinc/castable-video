@@ -1,6 +1,6 @@
 /* global globalThis, chrome, cast */
 
-class CastableVideo extends HTMLVideoElement {
+class CastableVideoElement extends HTMLVideoElement {
   static observedAttributes = ['cast-src'];
   static instances = new Set();
 
@@ -87,12 +87,12 @@ class CastableVideo extends HTMLVideoElement {
     super();
     this.castEnabled = false;
 
-    CastableVideo.instances.add(this);
+    CastableVideoElement.instances.add(this);
     this.#init();
   }
 
   get castPlayer() {
-    if (CastableVideo.castElement === this) return this.#remotePlayer;
+    if (CastableVideoElement.castElement === this) return this.#remotePlayer;
     return undefined;
   }
 
@@ -111,13 +111,13 @@ class CastableVideo extends HTMLVideoElement {
   }
 
   #disconnect() {
-    if (CastableVideo.#castElement !== this) return;
+    if (CastableVideoElement.#castElement !== this) return;
 
     this.#remoteListeners.forEach(([event, listener]) => {
       this.#remotePlayer.controller.removeEventListener(event, listener);
     });
 
-    CastableVideo.#castElement = undefined;
+    CastableVideoElement.#castElement = undefined;
 
     this.muted = this.#remoteState.muted;
     this.currentTime = this.#remoteState.currentTime;
@@ -127,7 +127,7 @@ class CastableVideo extends HTMLVideoElement {
   }
 
   #init() {
-    if (!CastableVideo.#isCastFrameworkAvailable || this.#castAvailable) return;
+    if (!CastableVideoElement.#isCastFrameworkAvailable || this.#castAvailable) return;
     this.#castAvailable = true;
     this.#setOptions();
 
@@ -139,17 +139,17 @@ class CastableVideo extends HTMLVideoElement {
     // Cast state: NO_DEVICES_AVAILABLE, NOT_CONNECTED, CONNECTING, CONNECTED
     // https://developers.google.com/cast/docs/reference/web_sender/cast.framework#.CastState
     const { CAST_STATE_CHANGED } = cast.framework.CastContextEventType;
-    CastableVideo.#castContext.addEventListener(CAST_STATE_CHANGED, () => {
+    CastableVideoElement.#castContext.addEventListener(CAST_STATE_CHANGED, () => {
       this.dispatchEvent(
         new CustomEvent('castchange', {
-          detail: CastableVideo.#castContext.getCastState(),
+          detail: CastableVideoElement.#castContext.getCastState(),
         })
       );
     });
 
     this.dispatchEvent(
       new CustomEvent('castchange', {
-        detail: CastableVideo.#castContext.getCastState(),
+        detail: CastableVideoElement.#castContext.getCastState(),
       })
     );
 
@@ -226,7 +226,7 @@ class CastableVideo extends HTMLVideoElement {
   }
 
   #setOptions(options) {
-    return CastableVideo.#castContext.setOptions({
+    return CastableVideoElement.#castContext.setOptions({
       // Set the receiver application ID to your own (created in the
       // Google Cast Developer Console), or optionally
       // use the chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
@@ -258,7 +258,7 @@ class CastableVideo extends HTMLVideoElement {
 
     // Note this could also include audio or video tracks, diff against local state.
     const activeTrackIds =
-      CastableVideo.#currentSession?.getSessionObj().media[0].activeTrackIds;
+      CastableVideoElement.#currentSession?.getSessionObj().media[0].activeTrackIds;
 
     const subtitles = [...this.textTracks].filter(
       ({ kind }) => kind === 'subtitles' || kind === 'captions'
@@ -286,7 +286,7 @@ class CastableVideo extends HTMLVideoElement {
     const request = new chrome.cast.media.EditTracksInfoRequest(
       requestTrackIds
     );
-    CastableVideo.#currentSession?.getSessionObj().media[0].editTracksInfo(
+    CastableVideoElement.#currentSession?.getSessionObj().media[0].editTracksInfo(
       request,
       () => {},
       (error) => console.error(error)
@@ -295,7 +295,7 @@ class CastableVideo extends HTMLVideoElement {
 
   async requestCast(options = {}) {
     this.#setOptions(options);
-    CastableVideo.#castElement = this;
+    CastableVideoElement.#castElement = this;
 
     this.#remoteListeners.forEach(([event, listener]) => {
       this.#remotePlayer.controller.addEventListener(event, listener);
@@ -303,9 +303,9 @@ class CastableVideo extends HTMLVideoElement {
 
     try {
       // Open browser cast menu.
-      await CastableVideo.#castContext.requestSession();
+      await CastableVideoElement.#castContext.requestSession();
     } catch (err) {
-      CastableVideo.#castElement = undefined;
+      CastableVideoElement.#castElement = undefined;
       // console.error(err); // Don't show an error if dismissing the menu.
       return;
     }
@@ -401,7 +401,7 @@ class CastableVideo extends HTMLVideoElement {
       }
     }
 
-    await CastableVideo.#currentSession?.loadMedia(request);
+    await CastableVideoElement.#currentSession?.loadMedia(request);
 
     this.dispatchEvent(new Event('volumechange'));
   }
@@ -534,10 +534,10 @@ class CastableVideo extends HTMLVideoElement {
 }
 
 if (!customElements.get('castable-video')) {
-  customElements.define('castable-video', CastableVideo, { extends: 'video' });
-  globalThis.CastableVideo = CastableVideo;
+  customElements.define('castable-video', CastableVideoElement, { extends: 'video' });
+  globalThis.CastableVideoElement = CastableVideoElement;
 }
 
-CastableVideo.initCast();
+CastableVideoElement.initCast();
 
-export default CastableVideo;
+export default CastableVideoElement;
