@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Castable Video</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+    />
+    <style>
+      body {
+        min-height: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      video {
+        aspect-ratio: 16 / 9;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      button {
+        padding: 7px 14px;
+      }
+    </style>
+    <script
+      defer
+      src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"
+    ></script>
+    <script type="module" src="./castable-video.js"></script>
+  </head>
+  <body>
+    <h1>Castable Video</h1>
+    <br />
+
+    <video
+      id="castable"
+      is="castable-video"
+      src="https://stream.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/high.mp4"
+      poster="https://image.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/thumbnail.jpg?time=56"
+      crossorigin
+    >
+      <track
+        default
+        label="English"
+        kind="captions"
+        srclang="en"
+        src="./en-cc.vtt"
+      />
+    </video>
+
+    <br />
+
+    <div class="controls">
+      <button onclick="window.castable.play()">Play</button>
+      <button onclick="window.castable.pause()">Pause</button>
+      <button onclick="window.castable.currentTime += 10">+10s</button>
+      <button onclick="window.castable.currentTime -= 10">-10s</button>
+      <button onclick="window.castable.muted = true">Mute</button>
+      <button onclick="window.castable.muted = false">Unmute</button>
+      <button onclick="window.castable.requestCast()">Request Cast</button>
+      <button onclick="window.CastableVideo.exitCast()">Exit Cast</button>
+    </div>
+
+    <script>
+      window.castable.addEventListener('entercast', function (event) {
+        console.log(event.type);
+      });
+
+      window.castable.addEventListener('leavecast', function (event) {
+        console.log(event.type);
+      });
+
+      window.castable.addEventListener('castchange', function (event) {
+        console.log(event.type, event.detail);
+      });
+    </script>
+  </body>
+</html>
