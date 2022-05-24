@@ -329,7 +329,7 @@ class CastableVideoElement extends HTMLVideoElement {
 
     const mediaInfo = new chrome.cast.media.MediaInfo(
       this.castSrc,
-      this.contentType
+      this.castContentType
     );
 
     mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
@@ -375,7 +375,7 @@ class CastableVideoElement extends HTMLVideoElement {
       });
     }
 
-    if (this.streamType?.includes('live')) {
+    if (this.castStreamType?.includes('live')) {
       mediaInfo.streamType = chrome.cast.media.StreamType.LIVE;
     } else {
       mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
@@ -441,20 +441,20 @@ class CastableVideoElement extends HTMLVideoElement {
     this.setAttribute('cast-src', `${val}`);
   }
 
-  get contentType() {
-    return this.getAttribute('content-type') ?? undefined;
+  get castContentType() {
+    return this.getAttribute('cast-content-type') ?? undefined;
   }
 
-  set contentType(val) {
-    this.setAttribute('content-type', `${val}`);
+  set castContentType(val) {
+    this.setAttribute('cast-content-type', `${val}`);
   }
 
-  get streamType() {
-    return this.getAttribute('stream-type') ?? undefined;
+  get castStreamType() {
+    return this.getAttribute('cast-stream-type') ?? undefined;
   }
 
-  set streamType(val) {
-    this.setAttribute('stream-type', `${val}`);
+  set castStreamType(val) {
+    this.setAttribute('cast-stream-type', `${val}`);
   }
 
   get readyState() {

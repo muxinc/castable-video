@@ -32,23 +32,30 @@ It was primarily built for use in [Media Chrome](https://github.com/muxinc/media
 
 ### Methods
 
-- `video.requestCast(options)`
-- `CastableVideoElement.exitCast()`
+- `video.requestCast(options)`: open the browser casting menu. Options:
+  - `receiverApplicationId`: defaults to Chromecast default receiver.
+  - `autoJoinPolicy` ('ORIGIN_SCOPED')
+  - `androidReceiverCompatible` (false): if `true` enables Cast Connect.
+  - `language` ('en-US')
+  - `resumeSavedSession` (false)
+- `CastableVideoElement.exitCast()`: stop casting right away.
 
 ### Properties
 
-- `CastableVideoElement.castElement`
-- `CastableVideoElement.castAvailable`
+- `CastableVideoElement.castElement`: the current video element being cast.
+- `CastableVideoElement.castAvailable`: `true` when the Cast SDK is available.
 
 ### Events
 
-- `entercast`
-- `leavecast`
-- `castchange`
+- `castchange`: fires when cast status changes. e.g. cast device detected.
+- `entercast`: fires when starting casting.
+- `leavecast`: fires when stopping casting.
 
 e.g. `video.addEventListener('entercast', () => {})`
 
 ### Attributes
 
-- `stream-type`: add `<video "stream-type="live">` for live streams.
-- `cast-src`: if Chromecast requires a different source than the one loaded.
+- `cast-src`: if Chromecast requires a different source than the one loaded.  
+  For example this would be needed if video src is a blob when using MSE.
+- `cast-stream-type`: add `<video cast-stream-type="live">` for live streams.
+- `cast-content-type`: required if Chromecast can't derive the content type from the source.
