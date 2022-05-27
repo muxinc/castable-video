@@ -76,6 +76,8 @@
 
       window.castable.addEventListener('castchange', function (event) {
         console.log(event.type, event.detail);
+        console.log('castEnabled', window.CastableVideoElement.castEnabled);
+        console.log('castElement', window.CastableVideoElement.castElement);
       });
     </script>
   </body>
