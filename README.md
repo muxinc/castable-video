@@ -43,7 +43,7 @@ It was primarily built for use in [Media Chrome](https://github.com/muxinc/media
 ### Properties
 
 - `CastableVideoElement.castElement`: the current video element being cast.
-- `CastableVideoElement.castAvailable`: `true` when the Cast SDK is available.
+- `CastableVideoElement.castEnabled`: `true` when the Cast SDK is available.
 
 ### Events
 
