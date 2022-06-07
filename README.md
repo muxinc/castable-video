@@ -59,3 +59,13 @@ e.g. `video.addEventListener('entercast', () => {})`
   For example this would be needed if video src is a blob when using MSE.
 - `cast-stream-type`: add `<video cast-stream-type="live">` for live streams.
 - `cast-content-type`: required if Chromecast can't derive the content type from the source.
+
+## Related
+
+- [Media Chrome](https://github.com/muxinc/media-chrome) Your media player's dancing suit. 🕺
+- [`<mux-video>`](https://github.com/muxinc/elements/tree/main/packages/mux-video) A Mux-flavored HTML5 video element w/ hls.js and Mux data builtin.
+- [`<youtube-video>`](https://github.com/muxinc/youtube-video-element) A web component for the YouTube player.
+- [`<wistia-video>`](https://github.com/luwes/wistia-video-element) A web component for the Wistia player.
+- [`<jwplayer-video>`](https://github.com/luwes/jwplayer-video-element) A web component for the JW player.
+- [`<hls-video>`](https://github.com/muxinc/hls-video-element) A web component for playing HTTP Live Streaming (HLS) videos.
+- [`<mux-player>`](https://github.com/muxinc/elements/tree/main/packages/mux-player) The official Mux-flavored video player web component.
