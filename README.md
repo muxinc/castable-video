@@ -1,6 +1,6 @@
 # `is="castable-video"`
 
-Cast your video element to the big screen with ease!
+[Cast](https://developers.google.com/cast) your video element to the big screen with ease!
 
 The lightweight `CastableVideoElement` class extends the native `HTMLVideoElement` API and adds casting functionality to any video element. The API was designed to have the feel of a native browser API similar to the other screen presentation API's.
 
