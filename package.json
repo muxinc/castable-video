@@ -7,7 +7,8 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx serve ."
+    "dev": "npx serve .",
+    "publish-release": "np ${1} --no-tests --any-branch --preview"
   },
   "repository": {
     "type": "git",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "eslint": "^8.15.0",
+    "np": "^7.6.1",
     "prettier": "^2.6.2"
   }
 }
