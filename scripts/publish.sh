@@ -16,7 +16,9 @@ release() {
   BUMP=$(conventional-recommended-bump -p angular)
   VERSION=$(npm --no-git-tag-version version ${1:-$BUMP})
   echo $VERSION
+  git tag $VERSION # temporary tag for conventional-changelog compare link
   conventional-changelog -p angular -i CHANGELOG.md -s
+  git tag -d $VERSION
   git add CHANGELOG.md
   git commit -m "docs(CHANGELOG): $VERSION"
   npm --force --allow-same-version version $VERSION -m "chore(release): %s"
