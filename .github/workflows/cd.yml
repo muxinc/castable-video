@@ -9,7 +9,7 @@ on:
       version_type:
         type: choice
         required: true
-        description: Version type
+        description: Version
         options:
         - patch
         - minor
@@ -32,3 +32,4 @@ jobs:
       - run: npm run publish-release ${{ inputs.version_type }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
