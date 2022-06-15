@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx serve .",
-    "publish-release": "np() { npm --no-git-tag-version version ${1} && conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md && VERSION=$(npm pkg get version | sed 's/\"//g') && git commit -m \"docs(CHANGELOG): $VERSION\" && npm --force --allow-same-version version $VERSION -m \"chore(release): %s\" && git push --follow-tags && conventional-github-releaser -p angular -r 0 && npm publish; }; np"
+    "publish-release": ". ./scripts/publish.sh; release"
   },
   "repository": {
     "type": "git",
@@ -53,6 +53,7 @@
   "devDependencies": {
     "conventional-changelog-cli": "^2.2.2",
     "conventional-github-releaser": "^3.1.5",
+    "conventional-recommended-bump": "^6.1.0",
     "eslint": "^8.15.0",
     "prettier": "^2.6.2"
   }
