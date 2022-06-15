@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx serve .",
-    "publish-release": "np ${1} --no-tests --any-branch --preview"
+    "publish-release": "np ${1} --no-tests --any-branch --no-2fa --preview"
   },
   "repository": {
     "type": "git",
