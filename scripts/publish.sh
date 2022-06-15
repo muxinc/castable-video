@@ -15,7 +15,6 @@
 release() {
   BUMP=$(conventional-recommended-bump -p angular)
   VERSION=$(npm --no-git-tag-version version ${1:-$BUMP})
-  echo $VERSION
   conventional-changelog -p angular -i CHANGELOG.md -s
   git add CHANGELOG.md
   git commit -m "docs(CHANGELOG): $VERSION"
