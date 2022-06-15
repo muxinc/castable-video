@@ -30,7 +30,7 @@ jobs:
       - uses: fregante/setup-git-user@v1
       - run: npm ci
       - run: npm run lint
-      - run: npm run publish-release ${{ inputs.version_type }}
+      - run: npm run publish-release -- ${{ inputs.version_type }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
