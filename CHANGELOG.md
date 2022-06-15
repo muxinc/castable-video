@@ -1,3 +1,7 @@
+# 0.4.0 (2022-06-15)
+
+
+
 ## [0.4.1](https://github.com/muxinc/castable-video/compare/v0.4.0...v0.4.1) (2022-06-15)
 
 
