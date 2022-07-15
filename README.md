@@ -44,6 +44,11 @@ It was primarily built for use in [Media Chrome](https://github.com/muxinc/media
 
 - `CastableVideoElement.castElement`: the current video element being cast.
 - `CastableVideoElement.castEnabled`: `true` when the Cast SDK is available.
+- `CastableVideoElement.castState`: the current cast state. 
+    - `NO_DEVICES_AVAILABLE`: No cast devices are available.
+    - `NOT_CONNECTED`: Cast devices are available, but a cast session is not established.
+    - `CONNECTING`: Cast session is being established.
+    - `CONNECTED`: Cast session is established.
 
 ### Events
 
