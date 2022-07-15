@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/muxinc/castable-video/compare/v0.4.5...v0.5.0) (2022-07-15)
+
+
+### Bug Fixes
+
+* add castState ([#9](https://github.com/muxinc/castable-video/issues/9)) ([25e39e8](https://github.com/muxinc/castable-video/commit/25e39e8876d5e9bce04664866e63421d41e4704f))
+
+
+
 ## [0.4.5](https://github.com/muxinc/castable-video/compare/v0.4.4...v0.4.5) (2022-06-15)
 
 
