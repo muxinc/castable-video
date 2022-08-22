@@ -65,6 +65,10 @@ e.g. `video.addEventListener('entercast', () => {})`
 - `cast-stream-type`: add `<video cast-stream-type="live">` for live streams.
 - `cast-content-type`: required if Chromecast can't derive the content type from the source.
 
+### Usage with MSE (for example Hls.js or Dash.js)
+
+When your media element is using Media Source Extension (MSE) element has a src like `src="blob://...`. If you are using [Hls.js](https://github.com/video-dev/hls.js/) or [Dash.js](https://github.com/Dash-Industry-Forum/dash.js/) you may have noticed this. Because of the `blob://..`, castable-video has no way to know what the source is, so you must set the `cast-src=` attribute to the full URL of the video source.
+
 ## Related
 
 - [Media Chrome](https://github.com/muxinc/media-chrome) Your media player's dancing suit. 🕺
