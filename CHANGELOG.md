@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/muxinc/castable-video/compare/v0.5.0...v0.5.1) (2023-03-03)
+
+
+### Features
+
+* add support for inferred streamType from media-ui-extensions. ([#12](https://github.com/muxinc/castable-video/issues/12)) ([558d8a2](https://github.com/muxinc/castable-video/commit/558d8a2cd3ac1f1ebb2ddc0f69aeb0c9c5558be9))
+
+
+
 # [0.5.0](https://github.com/muxinc/castable-video/compare/v0.4.5...v0.5.0) (2022-07-15)
 
 
