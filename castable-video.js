@@ -547,7 +547,8 @@ export const CastableVideoMixin = (superclass) =>
     }
 
     get castStreamType() {
-      return this.getAttribute('cast-stream-type') ?? undefined;
+      // NOTE: Per https://github.com/video-dev/media-ui-extensions/issues/3 `streamType` may yield `"unknown"`
+      return this.getAttribute('cast-stream-type') ?? this.streamType ?? undefined;
     }
 
     set castStreamType(val) {
