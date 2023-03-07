@@ -1,3 +1,12 @@
+## [0.5.2](https://github.com/muxinc/castable-video/compare/v0.5.1...v0.5.2) (2023-03-07)
+
+
+### Bug Fixes
+
+* Add some simple checks/conditions for basic SSR support. ([#13](https://github.com/muxinc/castable-video/issues/13)) ([fbab309](https://github.com/muxinc/castable-video/commit/fbab309a3a7a02057d6eac2b1a9232e018803093))
+
+
+
 ## [0.5.1](https://github.com/muxinc/castable-video/compare/v0.5.0...v0.5.1) (2023-03-03)
 
 
