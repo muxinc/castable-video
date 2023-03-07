@@ -676,9 +676,11 @@ export const CastableVideoMixin = (superclass) =>
     }
   };
 
-export const CastableVideoElement = CastableVideoMixin(HTMLVideoElement);
+// Using Object as base class for (non-polyfilled) SSR to have a minimal stub version available
+export const CastableVideoElement = globalThis.HTMLVideoElement ? CastableVideoMixin(HTMLVideoElement) : CastableVideoMixin(Object);
 
-if (!customElements.get('castable-video')) {
+// Simple check to confirm env has customElements defined (aka non-polyfilled SSR)
+if (globalThis.customElements && !globalThis.customElements.get('castable-video')) {
   customElements.define('castable-video', CastableVideoElement, {
     extends: 'video',
   });
