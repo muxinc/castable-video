@@ -1,4 +1,4 @@
-/* global globalThis, chrome, cast */
+/* global chrome, cast */
 
 /**
  * CastableVideoMixin
