@@ -2,17 +2,26 @@
   "name": "castable-video",
   "version": "0.5.2",
   "description": "Cast your video element to the big screen with ease!",
+  "type": "module",
   "main": "castable-video.js",
+  "files": [],
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx serve .",
-    "publish-release": ". ./scripts/publish.sh; release"
+    "lint": "npx eslint *.js -c ./node_modules/wet-run/.eslintrc.json",
+    "test": "wet run",
+    "dev": "wet serve"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/muxinc/castable-video.git"
+  },
+  "author": "@muxinc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muxinc/castable-video/issues"
+  },
+  "homepage": "https://github.com/muxinc/castable-video#readme",
+  "devDependencies": {
+    "wet-run": "^0.2.0"
   },
   "keywords": [
     "chromecast",
@@ -24,37 +33,5 @@
     "media",
     "player",
     "controls"
-  ],
-  "author": "@muxinc",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/muxinc/castable-video/issues"
-  },
-  "homepage": "https://github.com/muxinc/castable-video#readme",
-  "prettier": {
-    "tabWidth": 2,
-    "singleQuote": true,
-    "semi": true
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es6": true,
-      "node": true
-    },
-    "extends": [
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2022,
-      "sourceType": "module"
-    }
-  },
-  "devDependencies": {
-    "conventional-changelog-cli": "^2.2.2",
-    "conventional-github-releaser": "^3.1.5",
-    "conventional-recommended-bump": "^6.1.0",
-    "eslint": "^8.15.0",
-    "prettier": "^2.6.2"
-  }
+  ]
 }
