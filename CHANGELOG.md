@@ -1,3 +1,12 @@
+## [0.5.3](https://github.com/muxinc/castable-video/compare/v0.5.2...v0.5.3) (2023-09-27)
+
+
+### Bug Fixes
+
+* simplify tooling ([#15](https://github.com/muxinc/castable-video/issues/15)) ([d73a848](https://github.com/muxinc/castable-video/commit/d73a8480c6a35ccc8799c065c57770260a9ac3bb))
+
+
+
 ## [0.5.2](https://github.com/muxinc/castable-video/compare/v0.5.1...v0.5.2) (2023-03-07)
 
 
