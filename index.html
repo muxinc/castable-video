@@ -14,7 +14,9 @@
         justify-content: center;
         flex-direction: column;
       }
+      castable-video,
       video {
+        width: 100%;
         aspect-ratio: 16 / 9;
       }
       .controls {
@@ -26,31 +28,41 @@
         padding: 7px 14px;
       }
     </style>
-    <script
-      defer
-      src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"
-    ></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/es-module-shims"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "custom-media-element": "https://cdn.jsdelivr.net/npm/custom-media-element@1.0/+esm"
+        }
+      }
+    </script>
+    <script defer src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
     <script type="module" src="./castable-video.js"></script>
   </head>
   <body>
     <h1>Castable Video</h1>
     <br />
 
-    <video
+    <castable-video
       id="castable"
-      is="castable-video"
-      src="https://stream.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/high.mp4"
       poster="https://image.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/thumbnail.jpg?time=56"
+      src="https://stream.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/high.mp4"
       crossorigin
     >
+      <!-- Uses progressive enhancement for best performance -->
+      <video
+        poster="https://image.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/thumbnail.jpg?time=56"
+        src="https://stream.mux.com/O6LdRc0112FEJXH00bGsN9Q31yu5EIVHTgjTKRkKtEq1k/high.mp4"
+      ></video>
       <track
         default
         label="English"
         kind="captions"
         srclang="en"
-        src="https://castable-video.vercel.app/en-cc.vtt"
+        src="./en-cc.vtt"
       />
-    </video>
+    </castable-video>
 
     <br />
 

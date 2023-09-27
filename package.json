@@ -4,7 +4,9 @@
   "description": "Cast your video element to the big screen with ease!",
   "type": "module",
   "main": "castable-video.js",
-  "files": [],
+  "files": [
+    "castable-mixin.js"
+  ],
   "scripts": {
     "lint": "npx eslint *.js -c ./node_modules/wet-run/.eslintrc.json",
     "test": "wet run",
@@ -33,5 +35,8 @@
     "media",
     "player",
     "controls"
-  ]
+  ],
+  "dependencies": {
+    "custom-media-element": "^1.0.0"
+  }
 }
