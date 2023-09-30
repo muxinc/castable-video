@@ -6,8 +6,8 @@ export const CastableVideoElement = globalThis.document
   : class {};
 
 if (globalThis.customElements && !globalThis.customElements.get('castable-video')) {
-  globalThis.customElements.define('castable-video', CastableVideoElement);
   globalThis.CastableVideoElement = CastableVideoElement;
+  globalThis.customElements.define('castable-video', CastableVideoElement);
 }
 
 CastableVideoElement.initCast();

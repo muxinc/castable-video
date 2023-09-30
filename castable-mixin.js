@@ -1,4 +1,17 @@
 /* global chrome, cast */
+import {
+  isChromeCastAvailable,
+  isCastFrameworkAvailable,
+  castContext,
+  currentSession,
+  currentMedia,
+  editTracksInfo,
+  getMediaStatus,
+  setCastOptions
+} from './castable-utils.js';
+
+let castElement;
+let castEnabled = false;
 
 /**
  * CastableMediaMixin
@@ -11,33 +24,33 @@
  */
 export const CastableMediaMixin = (superclass) =>
   class CastableMedia extends superclass {
+
     static observedAttributes = [
       ...(superclass.observedAttributes ?? []),
       'cast-src',
       'cast-content-type',
       'cast-stream-type',
     ];
+
     static instances = new Set();
 
-    static #castElement;
     static get castElement() {
-      return CastableMedia.#castElement;
+      return castElement;
     }
 
-    static #castEnabled = false;
     static get castEnabled() {
-      return CastableMedia.#castEnabled;
+      return castEnabled;
     }
 
     static get castState() {
-      return CastableMedia.#castContext?.getCastState();
+      return castContext()?.getCastState();
     }
 
     static async exitCast() {
       // Should the receiver application be stopped or just disconnected.
       const stopCasting = true;
       try {
-        await CastableMedia.#castContext.endCurrentSession(stopCasting);
+        await castContext().endCurrentSession(stopCasting);
       } catch (err) {
         console.error(err);
         return;
@@ -45,7 +58,7 @@ export const CastableMediaMixin = (superclass) =>
     }
 
     static initCast = () => {
-      if (!this.#isChromeCastAvailable) {
+      if (!isChromeCastAvailable()) {
         globalThis.__onGCastApiAvailable = () => {
           // The globalThis.__onGCastApiAvailable callback alone is not reliable for
           // the added cast.framework. It's loaded in a separate JS file.
@@ -55,7 +68,7 @@ export const CastableMediaMixin = (superclass) =>
             .whenDefined('google-cast-button')
             .then(() => this.#onSdkLoaded(chrome.cast.isAvailable));
         };
-      } else if (!this.#isCastFrameworkAvailable) {
+      } else if (!isCastFrameworkAvailable()) {
         customElements
           .whenDefined('google-cast-button')
           .then(() => this.#onSdkLoaded(chrome.cast.isAvailable));
@@ -66,15 +79,15 @@ export const CastableMediaMixin = (superclass) =>
 
     static #onSdkLoaded = (isAvailable) => {
       if (isAvailable) {
-        this.#castEnabled = true;
+        castEnabled = true;
 
         const { CAST_STATE_CHANGED } = cast.framework.CastContextEventType;
-        CastableMedia.#castContext.addEventListener(CAST_STATE_CHANGED, (e) => {
+        castContext().addEventListener(CAST_STATE_CHANGED, (e) => {
           this.instances.forEach((video) => video.#onCastStateChanged(e));
         });
 
         const { SESSION_STATE_CHANGED } = cast.framework.CastContextEventType;
-        CastableMedia.#castContext.addEventListener(
+        castContext().addEventListener(
           SESSION_STATE_CHANGED,
           (e) => {
             this.instances.forEach((video) => video.#onSessionStateChanged(e));
@@ -84,67 +97,6 @@ export const CastableMediaMixin = (superclass) =>
         this.instances.forEach((video) => video.#init());
       }
     };
-
-    static get #isChromeCastAvailable() {
-      return (
-        typeof chrome !== 'undefined' && chrome.cast && chrome.cast.isAvailable
-      );
-    }
-
-    static get #isCastFrameworkAvailable() {
-      return typeof cast !== 'undefined' && cast.framework;
-    }
-
-    static get #castContext() {
-      if (CastableMedia.#isCastFrameworkAvailable) {
-        return cast.framework.CastContext.getInstance();
-      }
-      return undefined;
-    }
-
-    static get #currentSession() {
-      return CastableMedia.#castContext?.getCurrentSession();
-    }
-
-    static get #currentMedia() {
-      return CastableMedia.#currentSession?.getSessionObj().media[0];
-    }
-
-    static #editTracksInfo(request) {
-      return new Promise((resolve, reject) => {
-        CastableMedia.#currentMedia.editTracksInfo(request, resolve, reject);
-      });
-    }
-
-    static #getMediaStatus(request) {
-      return new Promise((resolve, reject) => {
-        CastableMedia.#currentMedia.getStatus(request, resolve, reject);
-      });
-    }
-
-    static #setOptions(options) {
-      return CastableMedia.#castContext.setOptions({
-        // Set the receiver application ID to your own (created in the
-        // Google Cast Developer Console), or optionally
-        // use the chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
-        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-
-        // Auto join policy can be one of the following three:
-        // ORIGIN_SCOPED - Auto connect from same appId and page origin
-        // TAB_AND_ORIGIN_SCOPED - Auto connect from same appId, page origin, and tab
-        // PAGE_SCOPED - No auto connect
-        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
-
-        // The following flag enables Cast Connect(requires Chrome 87 or higher)
-        // https://developers.googleblog.com/2020/08/introducing-cast-connect-android-tv.html
-        androidReceiverCompatible: false,
-
-        language: 'en-US',
-        resumeSavedSession: true,
-
-        ...options,
-      });
-    }
 
     castEnabled = false;
     #localState = { paused: false };
@@ -162,7 +114,7 @@ export const CastableMediaMixin = (superclass) =>
     }
 
     get castPlayer() {
-      if (CastableMedia.castElement === this) return this.#remotePlayer;
+      if (castElement === this) return this.#remotePlayer;
       return undefined;
     }
 
@@ -184,13 +136,13 @@ export const CastableMediaMixin = (superclass) =>
     }
 
     #disconnect() {
-      if (CastableMedia.#castElement !== this) return;
+      if (castElement !== this) return;
 
       Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
         this.#remotePlayer.controller.removeEventListener(event, listener);
       });
 
-      CastableMedia.#castElement = undefined;
+      castElement = undefined;
 
       // isMuted is not in savedPlayerState. should we sync this back to local?
       this.muted = this.#remotePlayer.isMuted;
@@ -205,7 +157,7 @@ export const CastableMediaMixin = (superclass) =>
       // https://developers.google.com/cast/docs/reference/web_sender/cast.framework#.CastState
       this.dispatchEvent(
         new CustomEvent('castchange', {
-          detail: CastableMedia.#castContext.getCastState(),
+          detail: castContext().getCastState(),
         })
       );
     }
@@ -216,17 +168,17 @@ export const CastableMediaMixin = (superclass) =>
       // https://developers.google.com/cast/docs/reference/web_sender/cast.framework#.SessionState
 
       const { SESSION_RESUMED } = cast.framework.SessionState;
-      if (CastableMedia.#castContext.getSessionState() === SESSION_RESUMED) {
+      if (castContext().getSessionState() === SESSION_RESUMED) {
         /**
          * Figure out if this was the video that started the resumed session.
          * @TODO make this more specific than just checking against the video src!! (WL)
          *
          * If this video element can get the same unique id on each browser refresh
          * it would be possible to pass this unique id w/ `LoadRequest.customData`
-         * and verify against CastableMedia.#currentMedia.customData below.
+         * and verify against currentMedia().customData below.
          */
-        if (this.castSrc === CastableMedia.#currentMedia?.media.contentId) {
-          CastableMedia.#castElement = this;
+        if (this.castSrc === currentMedia()?.media.contentId) {
+          castElement = this;
 
           Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
             this.#remotePlayer.controller.addEventListener(event, listener);
@@ -238,9 +190,7 @@ export const CastableMediaMixin = (superclass) =>
            * The below status request syncs it back up.
            */
           try {
-            await CastableMedia.#getMediaStatus(
-              new chrome.cast.media.GetStatusRequest()
-            );
+            await getMediaStatus(new chrome.cast.media.GetStatusRequest());
           } catch (error) {
             console.error(error);
           }
@@ -257,9 +207,9 @@ export const CastableMediaMixin = (superclass) =>
     }
 
     #init() {
-      if (!CastableMedia.#isCastFrameworkAvailable || this.castEnabled) return;
+      if (!isCastFrameworkAvailable() || this.castEnabled) return;
       this.castEnabled = true;
-      CastableMedia.#setOptions();
+      setCastOptions();
 
       /**
        * @TODO add listeners for addtrack, removetrack (WL)
@@ -338,8 +288,8 @@ export const CastableMediaMixin = (superclass) =>
     }
 
     async requestCast(options = {}) {
-      CastableMedia.#setOptions(options);
-      CastableMedia.#castElement = this;
+      setCastOptions(options);
+      castElement = this;
 
       Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
         this.#remotePlayer.controller.addEventListener(event, listener);
@@ -347,9 +297,9 @@ export const CastableMediaMixin = (superclass) =>
 
       try {
         // Open browser cast menu.
-        await CastableMedia.#castContext.requestSession();
+        await castContext().requestSession();
       } catch (err) {
-        CastableMedia.#castElement = undefined;
+        castElement = undefined;
         // console.error(err); // Don't show an error if dismissing the menu.
         return;
       }
@@ -430,7 +380,7 @@ export const CastableMediaMixin = (superclass) =>
       request.autoplay = !this.#localState.paused;
       request.activeTrackIds = activeTrackIds;
 
-      await CastableMedia.#currentSession?.loadMedia(request);
+      await currentSession()?.loadMedia(request);
 
       this.dispatchEvent(new Event('volumechange'));
     }
@@ -473,7 +423,7 @@ export const CastableMediaMixin = (superclass) =>
 
       // Note this could also include audio or video tracks, diff against local state.
       const activeTrackIds =
-        CastableMedia.#currentSession?.getSessionObj().media[0]
+        currentSession()?.getSessionObj().media[0]
           ?.activeTrackIds ?? [];
       let requestTrackIds = activeTrackIds;
 
@@ -498,7 +448,7 @@ export const CastableMediaMixin = (superclass) =>
           const request = new chrome.cast.media.EditTracksInfoRequest(
             requestTrackIds
           );
-          await CastableMedia.#editTracksInfo(request);
+          await editTracksInfo(request);
         } catch (error) {
           console.error(error);
         }
