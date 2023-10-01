@@ -9,5 +9,3 @@ if (globalThis.customElements && !globalThis.customElements.get('castable-video'
   globalThis.CastableVideoElement = CastableVideoElement;
   globalThis.customElements.define('castable-video', CastableVideoElement);
 }
-
-CastableVideoElement.initCast();

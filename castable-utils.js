@@ -1,4 +1,38 @@
-/* global chrome, cast */
+/* global chrome, cast, WeakRef */
+
+// Fallback to a plain Set if WeakRef is not available.
+export const IterableWeakSet = globalThis.WeakRef ?
+  class extends Set {
+    add(el) {
+      super.add(new WeakRef(el));
+    }
+    forEach(fn) {
+      super.forEach((ref) => {
+        const value = ref.deref();
+        if (value) fn(value);
+      });
+    }
+  } : Set;
+
+export function onCastApiAvailable(callback) {
+  if (!isChromeCastAvailable()) {
+    globalThis.__onGCastApiAvailable = () => {
+      // The globalThis.__onGCastApiAvailable callback alone is not reliable for
+      // the added cast.framework. It's loaded in a separate JS file.
+      // http://www.gstatic.com/eureka/clank/101/cast_sender.js
+      // http://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js
+      customElements
+        .whenDefined('google-cast-button')
+        .then(() => callback(chrome.cast.isAvailable));
+    };
+  } else if (!isCastFrameworkAvailable()) {
+    customElements
+      .whenDefined('google-cast-button')
+      .then(() => callback(chrome.cast.isAvailable));
+  } else {
+    callback(chrome.cast.isAvailable);
+  }
+}
 
 export function isChromeCastAvailable() {
   return typeof chrome !== 'undefined' && chrome.cast && chrome.cast.isAvailable;

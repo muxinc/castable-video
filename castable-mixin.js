@@ -1,5 +1,7 @@
 /* global chrome, cast */
 import {
+  IterableWeakSet,
+  onCastApiAvailable,
   isChromeCastAvailable,
   isCastFrameworkAvailable,
   castContext,
@@ -10,8 +12,29 @@ import {
   setCastOptions
 } from './castable-utils.js';
 
+const mediaInstances = new IterableWeakSet();
+const mediaCallbacks = new WeakMap();
+
 let castElement;
 let castEnabled = false;
+
+onCastApiAvailable(function(isAvailable) {
+  if (isAvailable) {
+    castEnabled = true;
+
+    const { CAST_STATE_CHANGED } = cast.framework.CastContextEventType;
+    castContext().addEventListener(CAST_STATE_CHANGED, (e) => {
+      mediaInstances.forEach((m) => mediaCallbacks.get(m).onCastStateChanged(e));
+    });
+
+    const { SESSION_STATE_CHANGED } = cast.framework.CastContextEventType;
+    castContext().addEventListener(SESSION_STATE_CHANGED, (e) => {
+      mediaInstances.forEach((m) => mediaCallbacks.get(m).onSessionStateChanged(e));
+    });
+
+    mediaInstances.forEach((m) => mediaCallbacks.get(m).init());
+  }
+});
 
 /**
  * CastableMediaMixin
@@ -31,8 +54,6 @@ export const CastableMediaMixin = (superclass) =>
       'cast-content-type',
       'cast-stream-type',
     ];
-
-    static instances = new Set();
 
     static get castElement() {
       return castElement;
@@ -57,47 +78,6 @@ export const CastableMediaMixin = (superclass) =>
       }
     }
 
-    static initCast = () => {
-      if (!isChromeCastAvailable()) {
-        globalThis.__onGCastApiAvailable = () => {
-          // The globalThis.__onGCastApiAvailable callback alone is not reliable for
-          // the added cast.framework. It's loaded in a separate JS file.
-          // http://www.gstatic.com/eureka/clank/101/cast_sender.js
-          // http://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js
-          customElements
-            .whenDefined('google-cast-button')
-            .then(() => this.#onSdkLoaded(chrome.cast.isAvailable));
-        };
-      } else if (!isCastFrameworkAvailable()) {
-        customElements
-          .whenDefined('google-cast-button')
-          .then(() => this.#onSdkLoaded(chrome.cast.isAvailable));
-      } else {
-        this.#onSdkLoaded(chrome.cast.isAvailable);
-      }
-    };
-
-    static #onSdkLoaded = (isAvailable) => {
-      if (isAvailable) {
-        castEnabled = true;
-
-        const { CAST_STATE_CHANGED } = cast.framework.CastContextEventType;
-        castContext().addEventListener(CAST_STATE_CHANGED, (e) => {
-          this.instances.forEach((video) => video.#onCastStateChanged(e));
-        });
-
-        const { SESSION_STATE_CHANGED } = cast.framework.CastContextEventType;
-        castContext().addEventListener(
-          SESSION_STATE_CHANGED,
-          (e) => {
-            this.instances.forEach((video) => video.#onSessionStateChanged(e));
-          }
-        );
-
-        this.instances.forEach((video) => video.#init());
-      }
-    };
-
     castEnabled = false;
     #localState = { paused: false };
     #remotePlayer;
@@ -109,8 +89,17 @@ export const CastableMediaMixin = (superclass) =>
     constructor() {
       super();
 
-      CastableMedia.instances.add(this);
-      this.#init();
+      if (globalThis.chrome) {
+
+        mediaInstances.add(this);
+        mediaCallbacks.set(this, {
+          init: () => this.#init(),
+          onCastStateChanged: () => this.#onCastStateChanged(),
+          onSessionStateChanged: () => this.#onSessionStateChanged(),
+        });
+
+        this.#init();
+      }
     }
 
     get castPlayer() {
@@ -288,6 +277,12 @@ export const CastableMediaMixin = (superclass) =>
     }
 
     async requestCast(options = {}) {
+
+      if (!isChromeCastAvailable()) {
+        console.error('Casting is not enabled in this browser.');
+        return;
+      }
+
       setCastOptions(options);
       castElement = this;
 
