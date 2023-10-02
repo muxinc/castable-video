@@ -73,15 +73,15 @@
       <button onclick="castable.currentTime -= 10">-10s</button>
       <button onclick="castable.muted = true">Mute</button>
       <button onclick="castable.muted = false">Unmute</button>
-      <button id="promptBtn" hidden onclick="castable.remote.prompt()">Cast...</button>
+      <button id="castBtn" hidden onclick="castable.remote.prompt()">Cast...</button>
     </div>
 
     <script type="module">
 
       if (castable.remote.state === 'disconnected') {
         castable.remote.watchAvailability((available) => {
-          promptBtn.hidden = false;
-          promptBtn2.hidden = false;
+          castBtn.hidden = !available;
+          castBtn2.hidden = !available;
         })
         .then((id) => {
           console.log(`> Started watching remote device availability: ${id}`);
@@ -116,7 +116,7 @@
       <button onclick="castable2.currentTime -= 10">-10s</button>
       <button onclick="castable2.muted = true">Mute</button>
       <button onclick="castable2.muted = false">Unmute</button>
-      <button id="promptBtn2" hidden onclick="castable2.remote.prompt()">Cast...</button>
+      <button id="castBtn2" hidden onclick="castable2.remote.prompt()">Cast...</button>
     </div>
   </body>
 </html>
