@@ -37,7 +37,6 @@
         }
       }
     </script>
-    <script defer src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
     <script type="module" src="./castable-video.js"></script>
   </head>
   <body>
@@ -68,30 +67,56 @@
     <br />
 
     <div class="controls">
-      <button onclick="window.castable.play()">Play</button>
-      <button onclick="window.castable.pause()">Pause</button>
-      <button onclick="window.castable.currentTime += 10">+10s</button>
-      <button onclick="window.castable.currentTime -= 10">-10s</button>
-      <button onclick="window.castable.muted = true">Mute</button>
-      <button onclick="window.castable.muted = false">Unmute</button>
-      <button onclick="window.castable.requestCast()">Request Cast</button>
-      <button onclick="window.CastableVideoElement.exitCast()">Exit Cast</button>
+      <button onclick="castable.play()">Play</button>
+      <button onclick="castable.pause()">Pause</button>
+      <button onclick="castable.currentTime += 10">+10s</button>
+      <button onclick="castable.currentTime -= 10">-10s</button>
+      <button onclick="castable.muted = true">Mute</button>
+      <button onclick="castable.muted = false">Unmute</button>
+      <button id="promptBtn" hidden onclick="castable.remote.prompt()">Cast...</button>
     </div>
 
-    <script>
-      window.castable.addEventListener('entercast', function (event) {
-        console.log(event.type);
+    <script type="module">
+
+      if (castable.remote.state === 'disconnected') {
+        castable.remote.watchAvailability((available) => {
+          promptBtn.hidden = false;
+          promptBtn2.hidden = false;
+        })
+        .then((id) => {
+          console.log(`> Started watching remote device availability: ${id}`);
+        });
+      }
+
+      castable.remote.addEventListener('connect', function (event) {
+        console.log('remote', `event: ${event.type}`, '|', `state: ${castable.remote.state}`);
       });
 
-      window.castable.addEventListener('leavecast', function (event) {
-        console.log(event.type);
+      castable.remote.addEventListener('connecting', function (event) {
+        console.log('remote', `event: ${event.type}`, '|', `state: ${castable.remote.state}`);
       });
 
-      window.castable.addEventListener('castchange', function (event) {
-        console.log(event.type, event.detail);
-        console.log('castEnabled', window.CastableVideoElement.castEnabled);
-        console.log('castElement', window.CastableVideoElement.castElement);
+      castable.remote.addEventListener('disconnect', function (event) {
+        console.log('remote', `event: ${event.type}`, '|', `state: ${castable.remote.state}`);
       });
     </script>
+
+    <castable-video
+      id="castable2"
+      src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/high.mp4"
+      crossorigin
+    ></castable-video>
+
+    <br />
+
+    <div class="controls">
+      <button onclick="castable2.play()">Play</button>
+      <button onclick="castable2.pause()">Pause</button>
+      <button onclick="castable2.currentTime += 10">+10s</button>
+      <button onclick="castable2.currentTime -= 10">-10s</button>
+      <button onclick="castable2.muted = true">Mute</button>
+      <button onclick="castable2.muted = false">Unmute</button>
+      <button id="promptBtn2" hidden onclick="castable2.remote.prompt()">Cast...</button>
+    </div>
   </body>
 </html>

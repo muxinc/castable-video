@@ -1,5 +1,11 @@
 /* global chrome, cast, WeakRef */
 
+export const privateProps = new WeakMap();
+
+export class InvalidStateError extends Error {}
+export class NotSupportedError extends Error {}
+export class NotFoundError extends Error {}
+
 // Fallback to a plain Set if WeakRef is not available.
 export const IterableWeakSet = globalThis.WeakRef ?
   class extends Set {
@@ -19,8 +25,8 @@ export function onCastApiAvailable(callback) {
     globalThis.__onGCastApiAvailable = () => {
       // The globalThis.__onGCastApiAvailable callback alone is not reliable for
       // the added cast.framework. It's loaded in a separate JS file.
-      // http://www.gstatic.com/eureka/clank/101/cast_sender.js
-      // http://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js
+      // https://www.gstatic.com/eureka/clank/101/cast_sender.js
+      // https://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js
       customElements
         .whenDefined('google-cast-button')
         .then(() => callback(chrome.cast.isAvailable));
@@ -32,6 +38,19 @@ export function onCastApiAvailable(callback) {
   } else {
     callback(chrome.cast.isAvailable);
   }
+}
+
+export function requiresCastFramework() {
+  return globalThis.chrome && !globalThis.chrome.cast;
+}
+
+export function loadCastFramework() {
+  const sdkUrl = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
+  if (document.querySelector(`script[src="${sdkUrl}"]`)) return;
+
+  const script = document.createElement('script');
+  script.src = sdkUrl;
+  document.head.append(script);
 }
 
 export function isChromeCastAvailable() {
