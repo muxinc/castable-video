@@ -41,12 +41,13 @@ export function onCastApiAvailable(callback) {
 }
 
 export function requiresCastFramework() {
-  return globalThis.chrome && !globalThis.chrome.cast;
+  // todo: exclude for Android>=56 which supports the Remote Playback API natively.
+  return globalThis.chrome;
 }
 
 export function loadCastFramework() {
   const sdkUrl = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
-  if (document.querySelector(`script[src="${sdkUrl}"]`)) return;
+  if (globalThis.chrome.cast || document.querySelector(`script[src="${sdkUrl}"]`)) return;
 
   const script = document.createElement('script');
   script.src = sdkUrl;

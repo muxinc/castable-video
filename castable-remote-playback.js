@@ -6,7 +6,6 @@ import {
   NotSupportedError,
   onCastApiAvailable,
   isChromeCastAvailable,
-  isCastFrameworkAvailable,
   castContext,
   currentSession,
   currentMedia,
@@ -222,7 +221,7 @@ export class RemotePlayback extends EventTarget {
   }
 
   #init() {
-    if (!isCastFrameworkAvailable() || this.#isInit) return;
+    if (!cf || this.#isInit) return;
     this.#isInit = true;
 
     setCastOptions();
