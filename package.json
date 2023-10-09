@@ -5,7 +5,9 @@
   "type": "module",
   "main": "castable-video.js",
   "files": [
-    "castable-mixin.js"
+    "castable-mixin.js",
+    "castable-remote-playback.js",
+    "castable-utils.js"
   ],
   "scripts": {
     "lint": "npx eslint *.js -c ./node_modules/wet-run/.eslintrc.json",
