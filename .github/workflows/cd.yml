@@ -16,7 +16,7 @@ on:
         - minor
         - major
         - prerelease
-      pre_release:
+      pre-release:
         type: choice
         required: false
         description: Pre-release
@@ -50,4 +50,4 @@ jobs:
       - uses: fregante/setup-git-user@v1
       - run: npm ci
       - run: npm run lint
-      - run: npx --yes wet-run@0.4.0 release ${{ inputs.version }} --pre-release "${{ inputs.pre_release }}" --provenance --changelog --github-release
+      - run: npx --yes wet-run@0.4.0 release ${{ inputs.version }} --pre-release "${{ inputs.pre-release }}" --provenance --changelog --github-release
