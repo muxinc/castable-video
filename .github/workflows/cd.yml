@@ -50,4 +50,4 @@ jobs:
       - uses: fregante/setup-git-user@v1
       - run: npm ci
       - run: npm run lint
-      - run: npx --yes wet-run@0.5.0 release ${{ inputs.version }} --prerelease "${{ inputs.prerelease }}" --provenance --changelog --github-release
+      - run: npx --yes wet-run@0.5.1 release ${{ inputs.version }} --prerelease "${{ inputs.prerelease }}" --provenance --changelog --github-release

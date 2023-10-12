@@ -15,9 +15,9 @@ import {
 } from './castable-utils.js';
 
 const remoteInstances = new IterableWeakSet();
+const castElementRef = new WeakSet();
 
 let cf;
-let castElement;
 
 onCastApiAvailable((isAvailable) => {
   if (isAvailable && !cf) {
@@ -69,7 +69,7 @@ export class RemotePlayback extends EventTarget {
   }
 
   get #castPlayer() {
-    if (castElement === this.#media) return this.#remotePlayer;
+    if (castElementRef.has(this.#media)) return this.#remotePlayer;
     return undefined;
   }
 
@@ -113,10 +113,10 @@ export class RemotePlayback extends EventTarget {
       throw new NotSupportedError('The RemotePlayback API is disabled on this platform.');
     }
 
-    const willDisconnect = castElement === this.#media;
+    const willDisconnect = castElementRef.has(this.#media);
+    castElementRef.add(this.#media);
 
     setCastOptions();
-    castElement = this.#media;
 
     Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
       this.#remotePlayer.controller.addEventListener(event, listener);
@@ -130,7 +130,7 @@ export class RemotePlayback extends EventTarget {
       if (err === 'cancel') {
         // If there will be no disconnect, reset some state here.
         if (!willDisconnect) {
-          castElement = undefined;
+          castElementRef.delete(this.#media);
         }
         return;
       }
@@ -142,13 +142,13 @@ export class RemotePlayback extends EventTarget {
   }
 
   #disconnect() {
-    if (castElement !== this.#media) return;
+    if (!castElementRef.has(this.#media)) return;
 
     Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
       this.#remotePlayer.controller.removeEventListener(event, listener);
     });
 
-    castElement = undefined;
+    castElementRef.delete(this.#media);
 
     // isMuted is not in savedPlayerState. should we sync this back to local?
     this.#media.muted = this.#remotePlayer.isMuted;
@@ -163,7 +163,7 @@ export class RemotePlayback extends EventTarget {
     // https://developers.google.com/cast/docs/reference/web_sender/cast.framework#.CastState
     const castState = castContext().getCastState();
 
-    if (castElement === this.#media) {
+    if (castElementRef.has(this.#media)) {
       if (castState === 'CONNECTING') {
         this.#state = 'connecting';
         this.dispatchEvent(new Event('connecting'));
@@ -196,7 +196,7 @@ export class RemotePlayback extends EventTarget {
        * and verify against currentMedia().customData below.
        */
       if (this.#media.castSrc === currentMedia()?.media.contentId) {
-        castElement = this.#media;
+        castElementRef.add(this.#media);
 
         Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
           this.#remotePlayer.controller.addEventListener(event, listener);
