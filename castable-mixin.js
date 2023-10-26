@@ -4,7 +4,8 @@ import {
   privateProps,
   requiresCastFramework,
   loadCastFramework,
-  currentSession
+  currentSession,
+  getDefaultCastOptions
 } from './castable-utils.js';
 
 /**
@@ -24,9 +25,11 @@ export const CastableMediaMixin = (superclass) =>
       'cast-src',
       'cast-content-type',
       'cast-stream-type',
+      'cast-receiver',
     ];
 
     #localState = { paused: false };
+    #castOptions = getDefaultCastOptions();
     #remote;
 
     get remote() {
@@ -51,6 +54,11 @@ export const CastableMediaMixin = (superclass) =>
 
     attributeChangedCallback(attrName, oldValue, newValue) {
       super.attributeChangedCallback(attrName, oldValue, newValue);
+
+      if (attrName === 'cast-receiver' && newValue) {
+        this.#castOptions.receiverApplicationId = newValue;
+        return;
+      }
 
       if (!this.#castPlayer) return;
 
@@ -153,6 +161,32 @@ export const CastableMediaMixin = (superclass) =>
         return;
       }
       super.pause();
+    }
+
+    /**
+     * @see https://developers.google.com/cast/docs/reference/web_sender/cast.framework.CastOptions
+     * @readonly
+     *
+     * @typedef {Object} CastOptions
+     * @property {string} [receiverApplicationId='CC1AD845'] - The app id of the cast receiver.
+     * @property {string} [autoJoinPolicy='origin_scoped'] - The auto join policy.
+     * @property {string} [language='en-US'] - The language to use for the cast receiver.
+     * @property {boolean} [androidReceiverCompatible=false] - Whether to use the Cast Connect.
+     * @property {boolean} [resumeSavedSession=true] - Whether to resume the last session.
+     *
+     * @return {CastOptions}
+     */
+    get castOptions() {
+      return this.#castOptions;
+    }
+
+    get castReceiver() {
+      return this.getAttribute('cast-receiver') ?? undefined;
+    }
+
+    set castReceiver(val) {
+      if (this.castReceiver == val) return;
+      this.setAttribute('cast-receiver', `${val}`);
     }
 
     // Allow the cast source url to be different than <video src>, could be a blob.

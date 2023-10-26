@@ -116,7 +116,7 @@ export class RemotePlayback extends EventTarget {
     const willDisconnect = castElementRef.has(this.#media);
     castElementRef.add(this.#media);
 
-    setCastOptions();
+    setCastOptions(this.#media.castOptions);
 
     Object.entries(this.#remoteListeners).forEach(([event, listener]) => {
       this.#remotePlayer.controller.addEventListener(event, listener);
@@ -224,7 +224,7 @@ export class RemotePlayback extends EventTarget {
     if (!cf || this.#isInit) return;
     this.#isInit = true;
 
-    setCastOptions();
+    setCastOptions(this.#media.castOptions);
 
     /**
      * @TODO add listeners for addtrack, removetrack (WL)

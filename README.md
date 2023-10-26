@@ -60,6 +60,13 @@ https://developer.mozilla.org/en-US/docs/Web/API/RemotePlayback
     - `disconnected`: Cast devices are available, but a cast session is not established.
     - `connecting`: Cast session is being established.
     - `connected`: Cast session is established.
+- `castOptions` [readonly]: the cast options passed to the cast session.
+  - `receiverApplicationId`: defaults to Chromecast default receiver.
+  - `autoJoinPolicy` ('ORIGIN_SCOPED')
+  - `androidReceiverCompatible` (false): if `true` enables Cast Connect.
+  - `language` ('en-US')
+  - `resumeSavedSession` (false)
+
 
 ### Events
 
@@ -71,10 +78,13 @@ e.g. `video.remote.addEventListener('connect', () => {})`
 
 ### Attributes
 
+Each attribute has a corresponding element property. e.g. `video.castSrc` or `video.castStreamType`.
+
 - `cast-src`: if Chromecast requires a different source than the one loaded.  
   For example this would be needed if video src is a blob when using MSE.
 - `cast-stream-type`: add `<castable-video cast-stream-type="live">` for live streams.
 - `cast-content-type`: required if Chromecast can't derive the content type from the source.
+- `cast-receiver`: the Chromecast receiver app id. Defaults to `CC1AD845`.
 
 ### Usage with MSE (for example Hls.js or Dash.js)
 

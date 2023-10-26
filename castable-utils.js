@@ -91,16 +91,23 @@ export function getMediaStatus(request) {
 
 export function setCastOptions(options) {
   return castContext().setOptions({
+    ...getDefaultCastOptions(),
+    ...options,
+  });
+}
+
+export function getDefaultCastOptions() {
+  return {
     // Set the receiver application ID to your own (created in the
     // Google Cast Developer Console), or optionally
     // use the chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
-    receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+    receiverApplicationId: 'CC1AD845',
 
     // Auto join policy can be one of the following three:
     // ORIGIN_SCOPED - Auto connect from same appId and page origin
     // TAB_AND_ORIGIN_SCOPED - Auto connect from same appId, page origin, and tab
     // PAGE_SCOPED - No auto connect
-    autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
+    autoJoinPolicy: 'origin_scoped',
 
     // The following flag enables Cast Connect(requires Chrome 87 or higher)
     // https://developers.googleblog.com/2020/08/introducing-cast-connect-android-tv.html
@@ -108,7 +115,5 @@ export function setCastOptions(options) {
 
     language: 'en-US',
     resumeSavedSession: true,
-
-    ...options,
-  });
+  };
 }
