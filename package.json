@@ -24,8 +24,11 @@
     "url": "https://github.com/muxinc/castable-video/issues"
   },
   "homepage": "https://github.com/muxinc/castable-video#readme",
+  "dependencies": {
+    "custom-media-element": "^1.0.0"
+  },
   "devDependencies": {
-    "wet-run": "^0.5.0"
+    "wet-run": "^0.5.1"
   },
   "keywords": [
     "chromecast",
@@ -37,8 +40,5 @@
     "media",
     "player",
     "controls"
-  ],
-  "dependencies": {
-    "custom-media-element": "^1.0.0"
-  }
+  ]
 }
