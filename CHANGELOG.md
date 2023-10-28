@@ -1,3 +1,7 @@
+# [1.0.0](https://github.com/muxinc/castable-video/compare/v0.5.3...v1.0.0) (2023-10-28)
+
+
+
 ## [0.5.3](https://github.com/muxinc/castable-video/compare/v0.5.2...v0.5.3) (2023-09-27)
 
 
