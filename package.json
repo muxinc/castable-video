@@ -4,7 +4,11 @@
   "description": "Cast your video element to the big screen with ease!",
   "type": "module",
   "main": "castable-video.js",
-  "files": [],
+  "files": [
+    "castable-mixin.js",
+    "castable-remote-playback.js",
+    "castable-utils.js"
+  ],
   "scripts": {
     "lint": "npx eslint *.js -c ./node_modules/wet-run/.eslintrc.json",
     "test": "wet run",
@@ -20,8 +24,11 @@
     "url": "https://github.com/muxinc/castable-video/issues"
   },
   "homepage": "https://github.com/muxinc/castable-video#readme",
+  "dependencies": {
+    "custom-media-element": "^1.0.0"
+  },
   "devDependencies": {
-    "wet-run": "^0.2.0"
+    "wet-run": "^0.5.1"
   },
   "keywords": [
     "chromecast",
