@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/muxinc/castable-video/compare/v1.0.0...v1.0.1) (2023-11-30)
+
+
+### Bug Fixes
+
+* upgrade dependencies, readme ([81e5721](https://github.com/muxinc/castable-video/commit/81e5721f0e1e19ba16f4108adf02b72ca84bbb1a))
+
+
+
 # [1.0.0](https://github.com/muxinc/castable-video/compare/v0.5.3...v1.0.0) (2023-10-28)
 
 
