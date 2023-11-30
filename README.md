@@ -13,7 +13,6 @@ but it works great with any custom video controls as you can see in the example.
 
 
 ```html
-<script defer src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/castable-video/+esm"></script>
 
 <castable-video

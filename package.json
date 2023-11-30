@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/muxinc/castable-video#readme",
   "dependencies": {
-    "custom-media-element": "^1.0.0"
+    "custom-media-element": "^1.0.2"
   },
   "devDependencies": {
-    "wet-run": "^0.5.1"
+    "wet-run": "^0.8.1"
   },
   "keywords": [
     "chromecast",
