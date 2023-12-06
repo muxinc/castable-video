@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/muxinc/castable-video/compare/v1.0.1...v1.0.2) (2023-12-06)
+
+
+### Bug Fixes
+
+* add mixin type ([#17](https://github.com/muxinc/castable-video/issues/17)) ([876abfc](https://github.com/muxinc/castable-video/commit/876abfc090cbdde1f18feb6eb8d5657227c0f834))
+
+
+
 ## [1.0.1](https://github.com/muxinc/castable-video/compare/v1.0.0...v1.0.1) (2023-11-30)
 
 
