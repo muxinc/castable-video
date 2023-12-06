@@ -265,7 +265,7 @@ export const CastableMediaMixin = (superclass) =>
 
     set volume(val) {
       if (this.#castPlayer) {
-        this.#castPlayer.volumeLevel = val;
+        this.#castPlayer.volumeLevel = +val;
         this.#castPlayer.controller?.setVolumeLevel();
         return;
       }
