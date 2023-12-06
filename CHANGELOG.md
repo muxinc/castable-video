@@ -1,3 +1,12 @@
+## [1.0.3](https://github.com/muxinc/castable-video/compare/v1.0.2...v1.0.3) (2023-12-06)
+
+
+### Bug Fixes
+
+* volume level if string ([#18](https://github.com/muxinc/castable-video/issues/18)) ([e5376af](https://github.com/muxinc/castable-video/commit/e5376af7648bff53b4927db6bcc4c5182b56dae7))
+
+
+
 ## [1.0.2](https://github.com/muxinc/castable-video/compare/v1.0.1...v1.0.2) (2023-12-06)
 
 
