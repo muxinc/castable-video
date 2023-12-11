@@ -1,1 +1,1 @@
-export function CastableMediaMixin<TBase extends CustomElementConstructor>(Base: TBase): TBase;
+export function CastableMediaMixin<T extends CustomElementConstructor>(superclass: T): T;
