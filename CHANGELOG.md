@@ -1,3 +1,12 @@
+## [1.0.6](https://github.com/muxinc/castable-video/compare/v1.0.5...v1.0.6) (2024-01-02)
+
+
+### Bug Fixes
+
+* upgrade custom-media-element ([#21](https://github.com/muxinc/castable-video/issues/21)) ([d559665](https://github.com/muxinc/castable-video/commit/d559665fd070ea4154124c9296c8bef6b4eb387a))
+
+
+
 ## [1.0.5](https://github.com/muxinc/castable-video/compare/v1.0.4...v1.0.5) (2023-12-11)
 
 
