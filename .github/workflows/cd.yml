@@ -16,14 +16,20 @@ on:
         - minor
         - major
         - prerelease
+        - from-package
+        - from-git
       prerelease:
         type: choice
-        required: false
         description: Pre-release
         options:
         -
         - canary
         - beta
+      dryrun:
+        description: 'Dry-run'
+        type: boolean
+
+run-name: Deploy ${{ inputs.version }} ${{ inputs.dryrun && '--dry-run' || '' }} ${{ inputs.prerelease && format('--prerelease {0}', inputs.prerelease) || '' }}
 
 jobs:
   deploy:
@@ -48,4 +54,9 @@ jobs:
       - uses: fregante/setup-git-user@v1
       - run: npm ci
       - run: npm run lint
-      - run: npx --yes wet-run@0.9.3 release ${{ inputs.version }} --prerelease "${{ inputs.prerelease }}" --provenance --changelog --github-release
+      - run: npx --yes wet-run@1.0.1 release ${{ inputs.version }} ${{ inputs.dryrun && '--dry-run' || '' }} ${{ inputs.prerelease && format('--prerelease {0}', inputs.prerelease) || '' }} --provenance --changelog --github-release --verbose
+      - name: Get NPM version
+        id: npm-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - name: Released ${{ steps.npm-version.outputs.current-version}} ✨
+        run: echo ${{ steps.npm-version.outputs.current-version}}
